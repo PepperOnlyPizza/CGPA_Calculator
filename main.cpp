@@ -2,21 +2,44 @@
 #include <fstream>
 #include <vector>
 #include <string>
-using namespace std
-
-
+using namespace std;
 
 struct course
 {
-	string class;
+	string subject;
 	string grade;
 	int hours;
 	double GPA;
 };
 
-double calcGPA (string grade)
+void enterCourses(vector<course> courses)
 {
-	double GPA = 0;
+	bool done = false;
+	while (!done)
+	{
+		course index;
+		string subject;
+		string grade;
+		cout << "Type the subject name (if you are done, type \"done\"): ";
+		cin >> subject;
+		if (subject == "done" || subject == "Done"){done = true;}
+		else
+		{
+			index.subject = subject;
+			cout << "How many credit hours did you take? ";
+			cin >> index.hours;
+			cout << "What was your letter grade? ";
+			cin >> index.grade;
+			index.GPA = getGPA(index.grade); // cpp.sh thinks getGPA is na undeclared identifier???
+			courses.push_back(index);
+		}
+		cout << endl;
+	}
+}
+
+double getGPA(string grade)
+{
+	double GPA = 0.0;
 	if (grade == "a+" || grade == "A+")
 		GPA = 4.0;
 	else if (grade == "a" || grade == "A")
@@ -34,13 +57,11 @@ double calcGPA (string grade)
 	else if (grade == "c" || grade == "C")
 		GPA = 2.25;
 	else if (grade == "d" || grade == "D")
-		GPA = 2;
-	else if (grade == "f" || grade == "F")
-		GPA = 0;
+		GPA = 2.0;
 	return GPA;
 }
 
-double calcGPA(vector<course> courses)
+double getCGPA(vector<course> courses)
 {
 	double result = 0.0;
 	int totalHours = 0;
@@ -54,39 +75,23 @@ double calcGPA(vector<course> courses)
 	return result;
 }
 
+void printCourseGPA(vector<course> courses)
+{
+	for (course index : courses)
+	{
+		cout << endl << index.subject << ": " << endl
+			<< "Credits: " << index.hours << endl
+			<< "Grade: " << index.grade << endl
+			<< "GPA: " << index.GPA << endl << endl;
+	}
+}
+
 int main()
 {
 	vector<course> courses;
-	int totalClasses = 0;
-	bool done = false;
-	
-	while (!done)
-	{
-		string class;
-		string grade;
-		cout << "Type the subject name (if you are done, type \"done\": ";
-		cin >> class;
-		if (class == "done" || class == "Done"){done = true;}
-		else
-		{
-			course index = new course;
-			index.class = class;
-			cout << endl << "How many credit hours did you take? ";
-			cin >> index.hours;
-			cout << endl << "What was your letter grade? ";
-			cin >> index.grade;
-			index.GPA = getGPA(index.grade);
-			courses.push_back(index);
-		}
-	}
-	
-	CGPA = calcGPA(courses);
-	
-	for (course index : courses)
-	{
-		//
-	}
-	
-	
+	enterCourses(courses);
+	printCourseGPA(courses);
+	double CGPA = getCGPA(courses);
+	cout << "Your total GPA for the semester is: " << CGPA;
 	return 0;
 }
